@@ -15,7 +15,7 @@
 
     <!-- CDNs -->
     <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css" />
-    
+
     <!-- Font Awesome for social icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -135,23 +135,44 @@
         /* --- HERO --- */
         .hero {
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             position: relative;
             background: var(--text);
             overflow: hidden;
         }
 
-        #hero-video {
+        .hero-swiper {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .hero-slide {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: top;
+            opacity: 0.6;
+            transition: transform 8s linear;
+        }
+
+        .swiper-slide-active .hero-slide {
+            transform: scale(1.06);
+        }
+
+        .hero-content-wrapper {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            opacity: 0.5;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
         }
 
         .hero-title {
@@ -161,11 +182,7 @@
             color: var(--white);
             font-style: italic;
             display: flex;
-            z-index: 10;
-            /* gap: 200px; */
             mix-blend-mode: difference;
-            /* flex-direction: column; */
-            /* Space for the traveling item */
         }
 
         .hero-description {
@@ -176,11 +193,48 @@
             letter-spacing: 5px;
             text-transform: uppercase;
             color: var(--white);
-            z-index: 10;
             text-align: right;
             line-height: 2;
             opacity: 0.8 !important;
             width: 200px;
+        }
+
+        /* --- HERO TIMELINE --- */
+        .hero-timeline-container {
+            position: absolute;
+            bottom: 40px;
+            left: 6%;
+            width: 88%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-timeline-progress {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .timeline-label {
+            position: absolute;
+            top: -25px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+            opacity: 0.5;
+        }
+
+        .label-start {
+            left: 0;
+        }
+
+        .label-end {
+            right: 0;
         }
 
         /* --- NAVIGATION --- */
@@ -194,7 +248,8 @@
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            background: rgba(45, 27, 30, 0.2); /* Text color with 20% opacity */
+            background: rgba(45, 27, 30, 0.2);
+            /* Text color with 20% opacity */
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(253, 247, 248, 0.1);
@@ -352,46 +407,81 @@
 
         .accordion-card {
             flex: 1;
-            background: var(--white);
+            background-color: var(--white);
+            background-size: cover;
+            background-position: center;
             border-radius: 20px;
             padding: 40px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            transition: flex 0.8s var(--ease-long), background 0.5s;
+            transition: flex 0.8s var(--ease-long);
             overflow: hidden;
             position: relative;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
         }
 
+        .accordion-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(45, 27, 30, 0) 0%, rgba(45, 27, 30, 0.8) 100%);
+            z-index: 1;
+            transition: opacity 0.5s;
+        }
+
+        .accordion-card:hover::before {
+            background: linear-gradient(to bottom, rgba(233, 30, 99, 0.2) 0%, rgba(45, 27, 30, 0.9) 100%);
+        }
+
         .accordion-card:hover {
             flex: 3;
-            background: var(--secondary);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            pointer-events: none;
         }
 
         .card-num {
+            display: block;
             font-size: 1rem;
             font-weight: 600;
             color: var(--primary);
             margin-bottom: 20px;
+            transition: transform 0.5s var(--ease-long);
         }
 
         .card-title {
             font-size: 2.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             white-space: nowrap;
+            color: var(--white);
+            transition: transform 0.5s var(--ease-long);
         }
 
         .card-info {
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s 0.3s;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.6s var(--ease-long);
             font-size: 1rem;
-            color: #555;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
         }
 
         .accordion-card:hover .card-info {
             opacity: 1;
+            max-height: 100px;
+            margin-top: 10px;
+        }
+
+        /* Prevent text jumping by keeping titles stable */
+        .accordion-card:hover .card-title {
             transform: translateY(0);
         }
 
@@ -399,6 +489,11 @@
         .rituals-section {
             background: var(--text);
             color: var(--bg);
+        }
+
+        .rituals-section h2 {
+            font-size: 3rem;
+            margin-bottom: 50px;
         }
 
         .ritual-item {
@@ -412,14 +507,26 @@
 
         .ritual-name {
             font-size: 5vw;
+            z-index: 2;
+            transition: color 0.4s ease;
+        }
+
+        .ritual-info {
+            z-index: 2;
+            transition: color 0.4s ease;
+        }
+
+        .ritual-item:hover .ritual-name,
+        .ritual-item:hover .ritual-info {
+            color: var(--primary);
         }
 
         #ritual-hover-img {
             position: fixed;
-            width: 300px;
-            height: 400px;
+            width: 220px;
+            height: 200px;
             pointer-events: none;
-            z-index: 1000;
+            z-index: 1;
             opacity: 0;
             transform: translate(-50%, -50%) scale(0.8);
             transition: opacity 0.4s, transform 0.4s;
@@ -434,11 +541,16 @@
         }
 
         /* --- GALLERY --- */
+        #gallery .container>h2 {
+            font-size: 3rem;
+            margin-bottom: 50px;
+        }
+
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            grid-auto-rows: 300px;
+            grid-auto-rows: 100px;
         }
 
         .gallery-item {
@@ -446,14 +558,17 @@
             overflow: hidden;
         }
 
+        .gallery-item video,
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 1s;
+            display: block;
         }
 
-        .gallery-item:hover img {
+        .gallery-item:hover img,
+        .gallery-item:hover video {
             transform: scale(1.1);
         }
 
@@ -473,6 +588,9 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
             overflow: hidden;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
         }
 
         .reviews-ticker {
@@ -482,9 +600,9 @@
 
         .review-card {
             flex-shrink: 0;
-            width: 450px;
+            width: 400px;
             background: var(--white);
-            padding: 40px;
+            padding: 30px;
             margin: 0 40px;
             border-radius: 30px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.03);
@@ -641,53 +759,92 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         /* Social Media Icons */
         .social-icons {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            justify-content: center;
         }
-        
+
         .social-icon {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             width: 50px;
             height: 50px;
-            border-radius: 50%;
-            background: rgba(253, 247, 248, 0.15);
+            padding: 0 15px;
+            border-radius: 30px;
+            background: rgba(253, 247, 248, 0.1);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(253, 247, 248, 0.2);
             color: var(--bg);
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
             text-decoration: none;
+            overflow: hidden;
+            transition: all 0.6s var(--ease-long);
+            white-space: nowrap;
         }
-        
-        .social-icon:hover {
-            background: rgba(233, 30, 99, 0.25);
-            transform: translateY(-5px);
-            color: var(--primary);
-        }
-        
-        .social-icon i {
-            width: 100%;
-            height: 100%;
+
+        .social-icon i.main-icon {
+            font-size: 1.2rem;
+            min-width: 20px;
             display: flex;
-            align-items: center;
             justify-content: center;
+            transition: color 0.4s;
         }
-        
+
+        .social-icon span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-left: 0;
+            opacity: 0;
+            max-width: 0;
+            transition: all 0.6s var(--ease-long);
+        }
+
+        .social-icon i.arrow-icon {
+            font-size: 0.8rem;
+            margin-left: 0;
+            opacity: 0;
+            max-width: 0;
+            transform: rotate(-45deg);
+            /* Base rotation */
+            transition: all 0.6s var(--ease-long);
+        }
+
+        .social-icon:hover {
+            width: 180px;
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(233, 30, 99, 0.3);
+        }
+
+        .social-icon:hover span {
+            margin-left: 12px;
+            opacity: 1;
+            max-width: 100px;
+        }
+
+        .social-icon:hover i.arrow-icon {
+            margin-left: 8px;
+            opacity: 1;
+            max-width: 20px;
+            transform: rotate(-45deg);
+            /* Requested 35deg rotate */
+        }
+
         /* Ensure social icons stay on right in footer */
-        
+
         @media (max-width: 768px) {
             .footer-bottom {
                 flex-direction: column;
                 gap: 20px;
                 text-align: center;
             }
-            
+
             .social-icons {
                 justify-content: center;
             }
@@ -939,16 +1096,40 @@
 
     <!-- HERO -->
     <section class="hero" id="home">
-        <video id="hero-video" autoplay muted loop playsinline>
-            <source
-                src="https://player.vimeo.com/external/494252666.sd.mp4?s=6f3458b09d43505ec92095cc2810a08e12f66e07&profile_id=164"
-                type="video/mp4">
-        </video>
-        <h1 class="hero-title">
-            <span>Hyper</span>
-            <span>Radiance</span>
-        </h1>
-        <p class="hero-description">Bespoke<br>Aesthetic<br>Artistry</p>
+        <!-- Background Carousel -->
+        <div class="swiper hero-swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="hero-slide"
+                        style="background-image: url('./luxury_beauty_carousel_1_1767170339394.png');"></div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="hero-slide"
+                        style="background-image: url('./luxury_beauty_model_premium_1767171943098.png');">
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="hero-slide"
+                        style="background-image: url('./luxury_skincare_aesthetic_close_up_1767172097407.png');"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Static Hero Content -->
+        <div class="hero-content-wrapper">
+            <h1 class="hero-title">
+                <span>Hyper</span>
+                <span>Radiance</span>
+            </h1>
+            <p class="hero-description">Bespoke<br>Aesthetic<br>Artistry</p>
+        </div>
+
+        <!-- Timeline Notation -->
+        <div class="hero-timeline-container">
+            <span class="timeline-label label-start">Aura</span>
+            <div class="hero-timeline-progress" id="hero-progress"></div>
+            <span class="timeline-label label-end">Elysian</span>
+        </div>
     </section>
 
     <!-- ABOUT -->
@@ -970,25 +1151,34 @@
         <div class="container">
             <h2 style="font-size: 3rem;">Curated Services</h2>
             <div class="accordion-row">
-                <div class="accordion-card">
-                    <span class="card-num">01</span>
-                    <h3 class="card-title">Bridal</h3>
-                    <p class="card-info">Timeless elegance for your most precious moments.</p>
+                <div class="accordion-card" style="background-image: url('./bridal_makeup_item_1767172612189.png');">
+                    <div class="card-content">
+                        <span class="card-num">01</span>
+                        <h3 class="card-title">Bridal</h3>
+                        <p class="card-info">Timeless elegance for your most precious moments.</p>
+                    </div>
                 </div>
-                <div class="accordion-card">
-                    <span class="card-num">02</span>
-                    <h3 class="card-title">Editorial</h3>
-                    <p class="card-info">High-fashion concepts for photography and film.</p>
+                <div class="accordion-card" style="background-image: url('./editorial_makeup_item_1767172629234.png');">
+                    <div class="card-content">
+                        <span class="card-num">02</span>
+                        <h3 class="card-title">Editorial</h3>
+                        <p class="card-info">High-fashion concepts for photography and film.</p>
+                    </div>
                 </div>
-                <div class="accordion-card">
-                    <span class="card-num">03</span>
-                    <h3 class="card-title">Signature</h3>
-                    <p class="card-info">Bespoke rituals tailored to your unique skin.</p>
+                <div class="accordion-card" style="background-image: url('./signature_ritual_item_1767172665934.png');">
+                    <div class="card-content">
+                        <span class="card-num">03</span>
+                        <h3 class="card-title">Signature</h3>
+                        <p class="card-info">Bespoke rituals tailored to your unique skin.</p>
+                    </div>
                 </div>
-                <div class="accordion-card">
-                    <span class="card-num">04</span>
-                    <h3 class="card-title">Academy</h3>
-                    <p class="card-info">Masterclasses from professional artists.</p>
+                <div class="accordion-card"
+                    style="background-image: url('./academy_masterclass_item_1767172684043.png');">
+                    <div class="card-content">
+                        <span class="card-num">04</span>
+                        <h3 class="card-title">Academy</h3>
+                        <p class="card-info">Masterclasses from professional artists.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1003,25 +1193,25 @@
                     data-img="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=600">
                     <span>01</span>
                     <h3 class="ritual-name">Hydra</h3>
-                    <p>Deep infusion of hyaluronic acid for extreme hydration and plumpness.</p>
+                    <p class="ritual-info">Deep infusion of hyaluronic acid for extreme hydration and plumpness.</p>
                 </div>
                 <div class="ritual-item"
                     data-img="https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=600">
                     <span>02</span>
                     <h3 class="ritual-name">Gold</h3>
-                    <p>Exfoliation using 24k gold flakes to restore radiance.</p>
+                    <p class="ritual-info">Exfoliation using 24k gold flakes to restore radiance.</p>
                 </div>
                 <div class="ritual-item"
                     data-img="https://images.unsplash.com/photo-1503236823255-94609f598e71?q=80&w=600">
                     <span>03</span>
                     <h3 class="ritual-name">Lift</h3>
-                    <p>Radio-frequency contouring for non-surgical definition.</p>
+                    <p class="ritual-info">Radio-frequency contouring for non-surgical definition.</p>
                 </div>
                 <div class="ritual-item"
                     data-img="https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=600">
                     <span>04</span>
                     <h3 class="ritual-name">Glow</h3>
-                    <p>Vitamin C complex infusion to banish dullness.</p>
+                    <p class="ritual-info">Vitamin C complex infusion to banish dullness.</p>
                 </div>
             </div>
         </div>
@@ -1032,29 +1222,266 @@
         <div class="container">
             <h2 style="margin-bottom: 50px;">Lookbook</h2>
             <div class="gallery-grid">
-                <div class="gallery-item large"><img
-                        src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=800"></div>
-                <div class="gallery-item tall"><img
-                        src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=800"></div>
-                <div class="gallery-item"><img
-                        src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=600"></div>
-                <div class="gallery-item"><img
-                        src="https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600"></div>
-                <div class="gallery-item tall"><img
-                        src="https://images.unsplash.com/photo-1503236823255-94609f598e71?q=80&w=600"></div>
-                <div class="gallery-item"><img
-                        src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600"></div>
-                <div class="gallery-item"><img
-                        src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=600"></div>
-                <div class="gallery-item"><img
-                        src="https://images.unsplash.com/photo-1534528741775-5cebf100ffc2?q=80&w=600"></div>
+                <div class="gallery-item large">
+                    <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=800"
+                        alt="Editorial Beauty">
+                </div>
+                <div class="gallery-item tall">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/494252666.sd.mp4?s=6f3458b09d43505ec92095cc2810a08e12f66e07&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnBkYncyeGp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l41lMvI6j8iX9uS6U/giphy.gif"
+                        alt="Aesthetic Shimmer">
+                </div>
+                <div class="gallery-item">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/449103981.sd.mp4?s=9891465eef700140228d4da563507208d13e3164&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item tall">
+                    <img src="https://images.unsplash.com/photo-1503236823255-94609f598e71?q=80&w=600"
+                        alt="Luxury Portrait">
+                </div>
+                <div class="gallery-item">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/434045526.sd.mp4?s=c27df346617a6a42a0d98418525f00da61944882&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=600"
+                        alt="Detail Shot">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnBkYncyeGp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKDkDbIDJieKbVm/giphy.gif"
+                        alt="Soft Atmosphere">
+                </div>
+                <div class="gallery-item large">
+                    <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=800"
+                        alt="Editorial Beauty">
+                </div>
+                <div class="gallery-item tall">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/494252666.sd.mp4?s=6f3458b09d43505ec92095cc2810a08e12f66e07&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnBkYncyeGp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l41lMvI6j8iX9uS6U/giphy.gif"
+                        alt="Aesthetic Shimmer">
+                </div>
+                <div class="gallery-item">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/449103981.sd.mp4?s=9891465eef700140228d4da563507208d13e3164&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item tall">
+                    <img src="https://images.unsplash.com/photo-1503236823255-94609f598e71?q=80&w=600"
+                        alt="Luxury Portrait">
+                </div>
+                <div class="gallery-item">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/434045526.sd.mp4?s=c27df346617a6a42a0d98418525f00da61944882&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=600"
+                        alt="Detail Shot">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnBkYncyeGp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKDkDbIDJieKbVm/giphy.gif"
+                        alt="Soft Atmosphere">
+                </div>
+                <div class="gallery-item large">
+                    <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=800"
+                        alt="Editorial Beauty">
+                </div>
+                <div class="gallery-item tall">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/494252666.sd.mp4?s=6f3458b09d43505ec92095cc2810a08e12f66e07&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnBkYncyeGp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l41lMvI6j8iX9uS6U/giphy.gif"
+                        alt="Aesthetic Shimmer">
+                </div>
+                <div class="gallery-item">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/449103981.sd.mp4?s=9891465eef700140228d4da563507208d13e3164&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item tall">
+                    <img src="https://images.unsplash.com/photo-1503236823255-94609f598e71?q=80&w=600"
+                        alt="Luxury Portrait">
+                </div>
+                <div class="gallery-item">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/434045526.sd.mp4?s=c27df346617a6a42a0d98418525f00da61944882&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=600"
+                        alt="Detail Shot">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnBkYncyeGp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKDkDbIDJieKbVm/giphy.gif"
+                        alt="Soft Atmosphere">
+                </div>
+                <div class="gallery-item large">
+                    <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=800"
+                        alt="Editorial Beauty">
+                </div>
+                <div class="gallery-item tall">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/494252666.sd.mp4?s=6f3458b09d43505ec92095cc2810a08e12f66e07&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnBkYncyeGp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l41lMvI6j8iX9uS6U/giphy.gif"
+                        alt="Aesthetic Shimmer">
+                </div>
+                <div class="gallery-item">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/449103981.sd.mp4?s=9891465eef700140228d4da563507208d13e3164&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item tall">
+                    <img src="https://images.unsplash.com/photo-1503236823255-94609f598e71?q=80&w=600"
+                        alt="Luxury Portrait">
+                </div>
+                <div class="gallery-item">
+                    <video muted loop playsinline
+                        poster="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600">
+                        <source
+                            src="https://player.vimeo.com/external/434045526.sd.mp4?s=c27df346617a6a42a0d98418525f00da61944882&profile_id=164"
+                            type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=600"
+                        alt="Detail Shot">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnBkYncyeGp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6Znp6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKDkDbIDJieKbVm/giphy.gif"
+                        alt="Soft Atmosphere">
+                </div>
             </div>
         </div>
     </section>
 
     <!-- REVIEWS -->
     <section class="reviews-section">
-        <div class="reviews-ticker" id="reviews-ticker">
+        <div class="reviews-ticker" id="reviews-ticker-1">
+            <!-- Review 1 -->
+            <div class="review-card">
+                <div class="review-top">
+                    <img src="https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww"
+                        class="review-avatar" alt="Reviewer">
+                    <div class="review-meta">
+                        <h4>Elena V.</h4>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-content">"An incomparable experience. My skin breathes luxury and looks radiant."</p>
+            </div>
+            <!-- Review 2 -->
+            <div class="review-card">
+                <div class="review-top">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww"
+                        class="review-avatar" alt="Reviewer">
+                    <div class="review-meta">
+                        <h4>Julian R.</h4>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-content">"The artistry here is beyond anything I've seen in Paris. Absolute
+                    perfection."</p>
+            </div>
+            <!-- Review 3 -->
+            <div class="review-card">
+                <div class="review-top">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww"
+                        class="review-avatar" alt="Reviewer">
+                    <div class="review-meta">
+                        <h4>Sophia L.</h4>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-content">"Pure magic. The signature rituals changed my life and routine."</p>
+            </div>
+            <!-- Duplicate for Ticker Loop -->
+            <!-- Review 1 -->
+            <div class="review-card">
+                <div class="review-top">
+                    <img src="https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww"
+                        class="review-avatar" alt="Reviewer">
+                    <div class="review-meta">
+                        <h4>Elena V.</h4>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-content">"An incomparable experience. My skin breathes luxury and looks radiant."</p>
+            </div>
+            <!-- Review 2 -->
+            <div class="review-card">
+                <div class="review-top">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww"
+                        class="review-avatar" alt="Reviewer">
+                    <div class="review-meta">
+                        <h4>Julian R.</h4>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-content">"The artistry here is beyond anything I've seen in Paris. Absolute
+                    perfection."</p>
+            </div>
+            <!-- Review 3 -->
+            <div class="review-card">
+                <div class="review-top">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww"
+                        class="review-avatar" alt="Reviewer">
+                    <div class="review-meta">
+                        <h4>Sophia L.</h4>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-content">"Pure magic. The signature rituals changed my life and routine."</p>
+            </div>
+        </div>
+        <div class="reviews-ticker" id="reviews-ticker-2">
             <!-- Review 1 -->
             <div class="review-card">
                 <div class="review-top">
@@ -1171,9 +1598,21 @@
             <div class="footer-bottom">
                 <p>&copy; 2024 AURUM ROSE Artistry.</p>
                 <div class="social-icons">
-                    <a href="#" class="social-icon glass"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon glass"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon glass"><i class="fab fa-pinterest-p"></i></a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-instagram main-icon"></i>
+                        <span>Instagram</span>
+                        <i class="fas fa-arrow-right arrow-icon"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook-f main-icon"></i>
+                        <span>Facebook</span>
+                        <i class="fas fa-arrow-right arrow-icon"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-pinterest-p main-icon"></i>
+                        <span>Pinterest</span>
+                        <i class="fas fa-arrow-right arrow-icon"></i>
+                    </a>
                 </div>
                 <p>Designed for Light.</p>
             </div>
@@ -1198,9 +1637,71 @@
         window.addEventListener('load', () => {
             gsap.to("#brush", { left: "150%", duration: 1.5, ease: "power4.inOut" });
             gsap.to("#preloader", { opacity: 0, pointerEvents: "none", delay: 1 });
-            gsap.from(".hero-title", { opacity: 0, y: 100, duration: 2, delay: 1 });
+            gsap.from(".hero-title span", {
+                opacity: 0,
+                y: 100,
+                duration: 2,
+                delay: 1,
+                stagger: 0.2,
+                ease: "power4.out"
+            });
             gsap.to(".hero-description", { opacity: 0.6, y: 0, duration: 1, delay: 1.5 });
+
+            // Start Hero Carousel Timeline
+            startHeroProgress();
         });
+
+        // --- HERO CAROUSEL ---
+        const slideContent = [
+            { title: ["Hyper", "Radiance"], desc: "Bespoke<br>Aesthetic<br>Artistry" },
+            { title: ["Timeless", "Elegance"], desc: "Couture<br>Skin<br>Experience" },
+            { title: ["Aurum", "Glow"], desc: "High-Fashion<br>Artistry<br>Mastered" }
+        ];
+
+        const heroSwiper = new Swiper('.hero-swiper', {
+            loop: true,
+            speed: 1500,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            on: {
+                autoplayTimeLeft(s, time, progress) {
+                    // progress is 1 to 0
+                    gsap.set("#hero-progress", { width: `${(1 - progress) * 100}%` });
+                },
+                slideChange(s) {
+                    const index = s.realIndex;
+                    const current = slideContent[index];
+                    const titleSpans = document.querySelectorAll('.hero-title span');
+                    const heroDesc = document.querySelector('.hero-description');
+
+                    // Animation out (Moving backward/left)
+                    gsap.to([titleSpans, heroDesc], {
+                        opacity: 0,
+                        x: -50,
+                        duration: 0.6,
+                        ease: "power2.in",
+                        onComplete: () => {
+                            // Change content
+                            titleSpans[0].textContent = current.title[0];
+                            titleSpans[1].textContent = current.title[1];
+                            heroDesc.innerHTML = current.desc;
+
+                            // Animation in (Coming from forward/right)
+                            gsap.fromTo([titleSpans, heroDesc],
+                                { opacity: 0, x: 50 },
+                                { opacity: 1, x: 0, duration: 0.8, stagger: 0.1, ease: "power2.out" }
+                            );
+                        }
+                    });
+                }
+            }
+        });
+
+        function startHeroProgress() {
+            // This is handled by autoplayTimeLeft callback in Swiper 11
+        }
 
         // --- CUSTOM CURSOR ---
         const dot = document.querySelector('.cursor-dot');
@@ -1324,24 +1825,50 @@
             });
         });
 
-        // --- REVIEWS TICKER ANIMATION (Optimized) ---
-        const ticker = document.getElementById('reviews-ticker');
-        let tickerPos = 0;
-        const speed = 0.8; // Adjust speed as needed
+        // --- GALLERY VIDEO HOVER ---
+        const galleryVideos = document.querySelectorAll('.gallery-item video');
+        galleryVideos.forEach(v => {
+            v.addEventListener('mouseenter', () => {
+                v.play();
+            });
+            v.addEventListener('mouseleave', () => {
+                v.pause();
+            });
+        });
 
-        function animateTicker() {
-            tickerPos -= speed;
-            // The reset point should be half of the total width since we duplicated items
-            if (tickerPos <= -ticker.scrollWidth / 2) {
-                tickerPos = 0;
+        // --- REVIEWS TICKER ANIMATION (Opposite Directions) ---
+        const ticker1 = document.getElementById('reviews-ticker-1');
+        const ticker2 = document.getElementById('reviews-ticker-2');
+        let tickerPos1 = 0;
+        let tickerPos2 = 0;
+        const speed = 0.8;
+
+        function animateTickers() {
+            // Ticker 1: Right to Left
+            tickerPos1 -= speed;
+            if (ticker1) {
+                if (tickerPos1 <= -ticker1.scrollWidth / 2) {
+                    tickerPos1 = 0;
+                }
+                ticker1.style.transform = `translate3d(${tickerPos1}px, 0, 0)`;
             }
-            ticker.style.transform = `translate3d(${tickerPos}px, 0, 0)`;
-            requestAnimationFrame(animateTicker);
+
+            // Ticker 2: Left to Right
+            tickerPos2 += speed;
+            if (ticker2) {
+                if (tickerPos2 >= 0) {
+                    tickerPos2 = -ticker2.scrollWidth / 2;
+                }
+                ticker2.style.transform = `translate3d(${tickerPos2}px, 0, 0)`;
+            }
+
+            requestAnimationFrame(animateTickers);
         }
 
-        // Wait for images to load to get correct scrollWidth
         window.addEventListener('load', () => {
-            animateTicker();
+            // For ticker 2, start at the offset so it moves towards 0
+            if (ticker2) tickerPos2 = -ticker2.scrollWidth / 2;
+            animateTickers();
         });
 
         // --- MOBILE MENU LOGIC ---
